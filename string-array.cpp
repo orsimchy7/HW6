@@ -1,30 +1,28 @@
 
-#include <vector> //for using the template "vector"
-#include <string> //for using string-type elemnts
+#include "string-array.h"
 
 
-class StringArray : public String {
-	int arrLen; //need to initialize here or on split func??
-	std::vector<std::string*> subStrVec;
-	//const char* original_strg;
-	
-	
-	
-	//StringArray split(const char *delimiters)
+StringArray::StringArray() : subStrVec() {} //inialization list
+
+GenericString* StringArray::get_substr (int idx) {
+	return this->subStrVec[idx];
 }
 
 
-//NOT NEEDED!! IMPLEMENTED AT STRING.CPP
+int StringArray::getArrLen() {
+	return this->subStrVec.size();
+}
 
-//StringArray::split(const char *delimiters) {
-//	this->arrLen = 0;
-//	//need to convert const char* strg to (ordinary) char* strg?
-//	char* token = strtok(this->original_strg, delimeters);
-//	while (token != NULL) {
-//		//keep setting String array
-//		subStrVec.push_back(token);
-//		this->arrLen++;
-//		token = strtok(NULL, delimeters);
-//	}
 
-//}
+void StringArray::addSubStr(char *subStr) {
+	GenericString* addedStr = new String(subStr);
+	this->subStrVec.push_back(addedStr);
+}
+
+StringArray::~StringArray() {
+	for (GenericString* str : subStrVec) {
+            delete str; //deleting each sub str
+    }
+    subStrVec.clear(); // vector deleting
+}
+
