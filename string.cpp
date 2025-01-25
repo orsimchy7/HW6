@@ -1,44 +1,49 @@
 
-#include <string.h> //this or <cstring>?
-#include <stdio.h>
-#include <iostream> //why?
-#include "generic-string.h"
-//#include "string.h" needed?
-#include "string-array.h"
+#include <cstring>
+#include <iostream>
+using namespace std;
+#include "string.h"
 
-class String : public GenericString {
-	char* strg; //mustnt be const oherwise cant change!! and probably wasnt allowed to use std::string
-	StringArray substrg;
-	public:
-		String(); //constructor
-		StringArray split(const char *delimiters)
-		GenericString& operator=(const char *str)
-		GenericString& trim()
-		bool operator==(const GenericString &other)
-		bool operator==(const char *other)
-		int to_integer()
-		String& as_string()
-		const String& as_string()
-		GenericString* make_string(const char *str); //were asked to implement it here...
+//constuctors
+String::String(const char* str) : strg(nullptr) { //inialization list
+	if (str) {
+		strg = new char[strlen(str) + 1]; //+1 for '/0'
+		strcpy(strg, str);
+	}
+	else {
+		strg=nullptr;
+	}
+	cout << "String created" << endl;
 }
 
-//constuctor
-String::String() { cout << "String created" << endl}
-
+String::String(const String& other) {
+	this->strg = other.strg;
+}
 //operators
-String::operator=(const char *str) {
-	strcpy(this->strg, str);
+GenericString& String::operator=(const char *str) {
+	if (this->strg) {
+		delete[] this->strg; //free memory allocated before
+	}
+	if (str) {
+		this->strg = new char[strlen(str) + 1]; //+1 for '/0'
+		strcpy(this->strg, str);
+	}
+	else {
+		this->strg=nullptr;
+	}
 	return *this; //this is the way of returning refernce to this
 }
 
-String::operator==(const GenericString &other){
-	if (!strcmp(other.strg, this->strg)) {
+bool String::operator==(const GenericString &other) const {
+	const String* otherString = dynamic_cast<const String*>(&other);
+	if (!otherString) return false; //other is not a String - cant compare
+	if (!strcmp(otherString->strg, this->strg)) {
 		return true;
 	}
 	return false;
 }
 
-String::operator==(const char *other) {
+bool String::operator==(const char *other) const {
 	if (!strcmp(other, this->strg)) {
 		return true;
 	}
@@ -47,51 +52,75 @@ String::operator==(const char *other) {
 
 //other functions
 
-String::split(const char *delimiters) {
-	this->substrg->arrLen = 0;
+StringArray String::split(const char *delimiters) const {
+	StringArray substrs; //dont use this if arrlen is not member anymore: = new StringArray(); cause dont need constructor
+	char *strgTemp = new char[strlen(this->strg) + 1];
+	strcpy(strgTemp, this->strg);
 	//need to convert const char* strg to (ordinary) char* strg?
-	char* token = strtok(this->strg, delimeters);
-	while (token != NULL) {
+	char* token = strtok(strgTemp, delimiters);
+	while (token != nullptr) {
 		//keep setting String array
-		this->substrg->subStrVec.push_back(token);
-		this->substrg->arrLen++;
-		token = strtok(NULL, delimeters);
+		substrs.addSubStr(token);
+		//substrs.subStrVec.push_back(token);
+		token = strtok(nullptr, delimiters);
 	}
-
+	delete[] strgTemp;
+	return substrs;
 }
 
-String::trim() { //fix it!!
-	char* ptr = this->strg; //to avoid memory leaking. operator = has original meaning (?). and ptr doesnt need to be deleted in the end? check
-	while(*(ptr) != ' ') {
-		ptr++; //'removing' first white spaces
+GenericString& String::trim() {
+	//1. 'removing' first white spaces
+	char* ptr = this->strg; //to avoid mem leaking. operator = has original meaning and ptr doesnt need delete
+	while(*(ptr) == ' ' && ptr ) {
+		ptr++;
 	}
-	int lastidx = strlen(ptr);
-	while (lastidx >= 0 && ptr[lastidx] - 1 != ' ') {
+	if (ptr != this->strg) {
+		memmove(this->strg, ptr, strlen(ptr) + 1); //coping non-white-spaces srtg to start
+	}
+	//2. 'removing' last white spaces
+	int lastidx = strlen(this->strg) - 1;
+	while (lastidx >= 0 && this->strg[lastidx] == ' ') {
 		lastidx--;
 	}
-	*ptr[lastidx] = '\0';
-	delete(this->strg); //oh no! but it delete data of ptr1 too...
-	this->strg = new char[lastidx +1];
-	const char* new_strg = prt;
-	this = new_strg; //new meaning, right? strcpy suppose to stop when meet
-}
-//1. non const ver.
-String::String& as_string() {
-	dynamic_cast<String*>(this) //converts safely
+	this->strg[lastidx + 1] = '\0'; //rewrites first white space to be str end - '/0'
 	return *this;
 }
+//1. non const ver.
+String& String::as_string() {
+	String* str = dynamic_cast<String*>(this); //converts safely
+	return *str;
+}
 //2. const ver.
-String::String& as_string() {
-	dynamic_cast<String*>(this) //converts safely
-	const String& cnstRef = *this; //is legal? dont need constructor?
-	return cnstRef;
+const String& String::as_string() const {
+	const String* str = dynamic_cast<const String*>(this); //converts safely
+	return *str;
 }
 
 
-String::to_integer() {
-	return atoi(this->strg);
+int String::to_integer() const {
+	const char* str = this->strg;
+	return atoi(str);
 }
+
+String::~String() {
+	delete[] strg;
+	cout << "String destructed" << endl;
+}
+
+void String::printMethod() {
+	cout << "strg member is: "<< strg << endl;
+}
+
+
+
+//check in shat kabala
+GenericString* make_string(const char *str) {
+	GenericString *a = new String(str); //as requested, allocate memory
+	cout << "String was made" << endl;
+	return a;
+}
+
 
 //helpers:
-int atoi(const char* str) //converts numeric str to an actual num (int type)
-char *strtok(char *str, const char *delim) //break to substrings
+//int atoi(const char* str) //converts numeric str to an actual num (int type)
+//char *strtok(char *str, const char *delim) //break to substrings
