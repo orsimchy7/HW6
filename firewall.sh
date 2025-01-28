@@ -27,4 +27,4 @@ for Rule in $validRules; do #bash's IFS interepts lines as rules
 	validPackets+="\n"
 done
 
-echo "$validPackets" | sort | uniq
+echo -e "$validPackets" | sort | uniq
