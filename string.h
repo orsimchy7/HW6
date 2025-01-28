@@ -10,6 +10,7 @@ class String : public GenericString {
  public :
 	char* strg; //mustnt be const oherwise cant change!! and probably wasnt allowed to use std::string
  public :
+ 	String() = default;
  	String(const char* str); //constructor
  	String(const String& other); //copy constructor
 	StringArray split(const char *delimiters) const;

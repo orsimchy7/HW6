@@ -17,16 +17,16 @@ int main(int argc,char **argv){
 
 	//first we need to figure out if the rule is
 	//about Ip or Port
-	StringArray rule_divided=rule.split("=");
-	rule_divided[0]->trim();
-	StringArray rule_info = rule_divided[0]->split("-");
+	StringArray rule_divided=rule.split("="); 
+	rule_divided.get_substr(0)->trim();
+	StringArray rule_info = rule_divided.get_substr(0)->split("-");
 	//we will get in rule_info for example:
 	//["src", "ip"]
 
 	const char* port_str = "port";
     const char* ip_str = "ip";
 
-    if(rule_info[1]==ip_str){
+    if(*(rule_info.get_substr(1))==ip_str){
     	Ip ip_obj(rule);
 
     	//using the function parse_input(Generic_field& field)
@@ -41,13 +41,5 @@ int main(int argc,char **argv){
 
 
 
-	/*Ip ip("hi");
-
-	int ip_rule[4]; 
-	ip_rule[0] = 122;
-	ip_rule[1] = 12;
-	ip_rule[2] = 1;
-	ip_rule[3] = 0;
-	*/
 	return 0;
 }

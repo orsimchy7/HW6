@@ -2,6 +2,7 @@
 #define IP_H
 
 #include "generic-field.h" 
+#include "string.h"
 
 
 class Ip : public GenericField {
@@ -12,7 +13,7 @@ public:
 	String rule_info;
 
 
-    Ip(const char* rule);
+    Ip(const String& rule);
     ~Ip();
 
 

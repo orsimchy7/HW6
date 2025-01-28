@@ -2,6 +2,7 @@
 #define PORT_H
 
 #include "generic-field.h"
+#include "string.h"
 
 class Port : public GenericField {
 public:
@@ -9,7 +10,7 @@ public:
     int range_end = 0;
     String rule_info;
 
-    Port(const char* rule);
+    Port(const String& rule);
     ~Port();
 
     bool match(const GenericString &packet) const override;

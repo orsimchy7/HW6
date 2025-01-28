@@ -8,7 +8,8 @@ OBJS = string.o string-array.o ip.o port.o
 
 
 firewall.exe: firewall.o libfirewall.so #we dwclare using the libaries
-	$(CXX)  $(CXXFLAGS) firewall.o -o firewall.exe -lfirewall -linput -L.
+	$(CXX)  -std=c++11 -g -Wall firewall.o -o firewall.exe -lfirewall -linput -L.
+	#$(CXX)  $(CXXFLAGS) firewall.o -o firewall.exe -lfirewall -linput -L.
 
 firewall.o: main.cpp
 	$(CXX)  $(CXXFLAGS) -c -fpic main.cpp -o firewall.o
