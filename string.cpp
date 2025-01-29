@@ -99,6 +99,7 @@ int String::to_integer() const {
 }
 
 String::~String() {
+	cout << "String destructed" << endl;
 	delete[] strg;
 	cout << "String destructed" << endl;
 }

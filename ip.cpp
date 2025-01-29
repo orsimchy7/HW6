@@ -32,18 +32,13 @@ using namespace std;
 	//~Ip();
 //};
 
-Ip::Ip(const Ip& other): prefix(0),rule_info(NULL){
+Ip::Ip(const Ip& other) : prefix(other.prefix), rule_info(other.rule_info.strg) {
 
     //copy ip_rule_ints
     for(int i =0; i<4; i++){
         this->ip_rule_ints[i]= other.ip_rule_ints[i];
     }
 
-    //copy prefix
-    this->prefix = other.prefix;
-
-    //copy rule
-    this->rule_info = other.rule_info;
 
     cout << "COPY Ip() created" << endl;
 }
@@ -90,7 +85,6 @@ Ip::Ip(const String& rule){
 }
 
 Ip::~Ip(){
-
 	cout << "~Ip()" << endl;
 }
 
