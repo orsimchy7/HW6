@@ -14,11 +14,12 @@ public:
 
 
     Ip(const String& rule);
+    Ip(const Ip& other); //copy constructor
     ~Ip();
 
 
     bool match(const GenericString &packet) const;
-    unsigned int get_packet_ip(const GenericString& packet); 
+    unsigned int get_packet_ip(const GenericString& packet) const; 
 };
 
 

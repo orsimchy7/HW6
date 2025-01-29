@@ -2,6 +2,7 @@
 #include "generic-field.h"
 #include "generic-string.h"
 #include "string.h"
+#include "ip.h"
 #include <cstdbool>
 #include <cstring>
 #include <iostream>
@@ -9,27 +10,43 @@ using namespace std;
 //<iostream> provides us access to cout cin cerr
 
 //Ip inherits from that abstruct class GenericField
-class Ip: public GenericField{
+//class Ip: public GenericField{
 		
-public:
+//public:
 
-	int ip_rule_ints[4] = {0};
-	int prefix =0; //from MSB to LSB
-	String rule_info;
+	//int ip_rule_ints[4] = {0};
+	//int prefix =0; //from MSB to LSB
+	//String rule_info;
 
 
 	//we must implement the pure virtual func
-	bool match(const GenericString& packet) const;
+	//bool match(const GenericString& packet) const;
 
 
-	unsigned int get_packet_ip(const GenericString& packet) const; 
+	//unsigned int get_packet_ip(const GenericString& packet) const; 
 
 	//constructor that gets an ip rule
-	Ip(const String& rule);
+	//Ip(const String& rule);
 
 	//destructor
-	~Ip();
-};
+	//~Ip();
+//};
+
+Ip::Ip(const Ip& other): prefix(0),rule_info(NULL){
+
+    //copy ip_rule_ints
+    for(int i =0; i<4; i++){
+        this->ip_rule_ints[i]= other.ip_rule_ints[i];
+    }
+
+    //copy prefix
+    this->prefix = other.prefix;
+
+    //copy rule
+    this->rule_info = other.rule_info;
+
+    cout << "COPY Ip() created" << endl;
+}
 
 Ip::Ip(const String& rule){
     String local_rule = rule;
@@ -66,6 +83,7 @@ Ip::Ip(const String& rule){
     //finding if the rule is about src or dst
     rule_info = as1.get_substr(0)->trim().as_string();
 
+    cout << "Ip() created" << endl;
 
    	//delete local_rule;
 	//cout<< "constructor IP" << endl;

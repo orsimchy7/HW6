@@ -5,22 +5,18 @@ using namespace std;
 #include "string.h"
 
 //constuctors
-String::String(const char* str) : strg(nullptr) { //inialization list
-	if (str) {
-		strg = new char[strlen(str) + 1]; //+1 for '/0'
-		strcpy(strg, str);
-	}
-	else {
-		strg=nullptr;
-	}
+String::String(const char* str) : strg(new char[strlen(str) + 1]) { //inialization list
+	strcpy(strg, str);
+
 	cout << "String created" << endl;
 }
 
-String::String(const String& other) {
-	this->strg = other.strg;
+String::String(const String& other): strg(new char[strlen(other.strg) + 1]) {
+	strcpy(this->strg, other.strg);
 }
 //operators
 GenericString& String::operator=(const char *str) {
+	if(!str) return *this;
 	if (this->strg) {
 		delete[] this->strg; //free memory allocated before
 	}
